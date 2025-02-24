@@ -55,10 +55,10 @@ function validateMatch() {
     }
 }
 
-// Force Rear Camera for Mobile Users
+// Force Rear Camera for Mobile
 /*function requestRearCameraAccess() {
     navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" } // Forces rear camera
+        video: { facingMode: "environment" }
     })
     .then(stream => {
         console.log("Rear camera access granted.");
@@ -67,6 +67,10 @@ function validateMatch() {
         console.error("Camera access error:", error);
     });
 }*/
+
+document.getElementById("refreshButton").addEventListener("click", function() {
+    location.reload();
+});
 
 // Initialize scanners
 window.onload = function() {
