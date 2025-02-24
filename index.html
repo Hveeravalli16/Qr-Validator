@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode & QR Code Validator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/html5-qrcode" defer></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <h2>Barcode & QR Code Validator</h2>
+
+    <!-- Barcode Scanner -->
+    <h3>Scan Barcode</h3>
+    <div id="barcodeScanner"></div>
+    <p id="barcodeValue">Barcode: Not scanned</p>
+
+    <!-- Dropdown for Suffix Selection -->
+    <h3>Select Suffix</h3>
+    <select id="suffixSelect" onchange="updateSuffix()">
+        <option value="">-- Select --</option>
+        <option value="CA">CA</option>
+        <option value="FD">FD</option>
+        <option value="ON">ON</option>
+        <option value="AB">AB</option>
+        <option value="PEI">PEI</option>
+        <option value="MB">MB</option>
+        <option value="NU">NU</option>
+    </select>
+
+    <!-- QR Code Scanner -->
+    <h3>Scan QR Code</h3>
+    <div id="qrScanner"></div>
+    <p id="qrCodeValue">QR Code: Not scanned</p>
+
+    <!-- Validate Match -->
+    <button onclick="validateMatch()">Validate</button>
+    <p id="validationResult"></p>
+
+</body>
+</html>
