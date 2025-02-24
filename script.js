@@ -56,7 +56,7 @@ function validateMatch() {
 }
 
 // Force Rear Camera for Mobile Users
-function requestRearCameraAccess() {
+/*function requestRearCameraAccess() {
     navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment" } // Forces rear camera
     })
@@ -66,11 +66,11 @@ function requestRearCameraAccess() {
     .catch(error => {
         console.error("Camera access error:", error);
     });
-}
+}*/
 
 // Initialize scanners
 window.onload = function() {
-    requestRearCameraAccess(); // Ensure rear camera access
+    //requestRearCameraAccess(); // Ensure rear camera access
     scanBarcode();
     scanQRCode();
 };
