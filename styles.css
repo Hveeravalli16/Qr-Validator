@@ -36,4 +36,5 @@ button:hover {
 #logo {
 block-size: 200px;
 inline-size: 400px;
+text-align: center;
 }
