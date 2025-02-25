@@ -32,3 +32,6 @@ button:hover {
     font-weight: bold; 
     margin-block-start: 20px; 
 }
+.img{
+max-width: 80%;
+}
