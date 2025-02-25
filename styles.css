@@ -32,3 +32,8 @@ button:hover {
     font-weight: bold; 
     margin-block-start: 20px; 
 }
+
+#logo {
+block-size: 80%;
+inline-size: none;
+}
