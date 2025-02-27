@@ -41,6 +41,6 @@ text-align: center;
 
 #barcodeScanner, #qrScanner {
     inline-size: 80%;
-    max-inline-size: 400px;
+    max-inline-size: 350px;
     margin: auto;
 }
