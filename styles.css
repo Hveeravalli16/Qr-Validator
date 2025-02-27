@@ -35,6 +35,12 @@ button:hover {
 
 #logo {
 block-size: 200px;
-inline-size: 300px;
+inline-size: 400px;
 text-align: center;
+}
+
+#barcodeScanner, #qrScanner {
+    inline-size: 80%;
+    max-inline-size: 400px;
+    margin: auto;
 }

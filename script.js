@@ -1,13 +1,19 @@
 let barcodeValue = "";
 let selectedProvince = "";
 let qrCodeValue = "";
+let barcodeScanner = null;
+let qrScanner = null;
 
-// Function to handle barcode scanning
-function scanBarcode() {
-    const barcodeScanner = new Html5QrcodeScanner(
+// Function to start barcode scanning
+function startBarcodeScanner() {
+    if (barcodeScanner) {
+        barcodeScanner.clear();
+    }
+
+    barcodeScanner = new Html5QrcodeScanner(
         "barcodeScanner",
         { fps: 10, qrbox: 250 },
-        false // Disable verbose logging
+        false
     );
 
     barcodeScanner.render(result => {
@@ -24,12 +30,16 @@ function updateProvince() {
     selectedProvince = document.getElementById("ProvinceSelect").value;
 }
 
-// Function to handle QR code scanning
-function scanQRCode() {
-    const qrScanner = new Html5QrcodeScanner(
+// Function to start QR code scanning
+function startQrScanner() {
+    if (qrScanner) {
+        qrScanner.clear();
+    }
+
+    qrScanner = new Html5QrcodeScanner(
         "qrScanner",
         { fps: 10, qrbox: 250 },
-        false // Disable verbose logging
+        false
     );
 
     qrScanner.render(result => {
@@ -37,7 +47,7 @@ function scanQRCode() {
         document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
         qrScanner.clear();
     }, errorMessage => {
-        console.log("QR code scanning error: ", errorMessage);
+        console.log("QR scanning error: ", errorMessage);
     });
 }
 
@@ -55,26 +65,24 @@ function validateMatch() {
     }
 }
 
-// Force Rear Camera for Mobile
-/*function requestRearCameraAccess() {
-    navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" }
-    })
-    .then(stream => {
-        console.log("Rear camera access granted.");
-    })
-    .catch(error => {
-        console.error("Camera access error:", error);
-    });
-}*/
+// Function to stop all scanning
+function stopScanning() {
+    if (barcodeScanner) {
+        barcodeScanner.clear();
+    }
+    if (qrScanner) {
+        qrScanner.clear();
+    }
+}
 
+// Refresh button stops scanning and reloads the page
 document.getElementById("refreshButton").addEventListener("click", function() {
+    stopScanning();
     location.reload();
 });
 
-// Initialize scanners
-window.onload = function() {
-    //requestRearCameraAccess(); // Ensure rear camera access
-    scanBarcode();
-    scanQRCode();
-};
+// Start scanning when button is pressed
+document.getElementById("startScanning").addEventListener("click", function() {
+    startBarcodeScanner();
+    startQrScanner();
+});
