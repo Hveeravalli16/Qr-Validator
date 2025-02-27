@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STLTH QR Validator</title>
+    <title>QR & Barcode Validator</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://unpkg.com/html5-qrcode" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@zxing/library@latest"></script>
     <script src="script.js" defer></script>
 </head>
 <body>
-    <img src="images/STLTH_LOGO_600x.webp" alt="Stlth" id="logo">
-
-    <h2>Batch Code & QR Validator</h2>
-
-    <button id="startScanning">Start Scanning</button>
+    <img src="images/STLTH_LOGO_600x.webp" alt="Logo" id="logo">
+    
+    <h2>BatchCode & QR Validator</h2>
 
     <!-- Barcode Scanner -->
     <h3>Scan Barcode</h3>
-    <div id="barcodeScanner"></div>
+    <video id="barcodeScanner" style="inline-size: 100%;"></video>
     <p id="barcodeValue">Barcode: Not scanned</p>
+    <button onclick="startBarcodeScanner()">Start Scanning</button>
 
     <!-- Dropdown for Province Selection -->
     <h3>Select Province</h3>
@@ -37,13 +36,15 @@
 
     <!-- QR Code Scanner -->
     <h3>Scan QR Code</h3>
-    <div id="qrScanner"></div>
+    <video id="qrScanner" style="inline-size: 100%;"></video>
     <p id="qrCodeValue">QR Code: Not scanned</p>
+    <button onclick="startQRScanner()">Start Scanning</button>
 
     <!-- Validate Match -->
     <button onclick="validateMatch()">Validate</button>
     <p id="validationResult"></p>
 
+    <!-- Refresh Button -->
     <button id="refreshButton">Refresh Page</button>
 </body>
 </html>

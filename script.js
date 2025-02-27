@@ -1,54 +1,50 @@
 let barcodeValue = "";
 let selectedProvince = "";
 let qrCodeValue = "";
-let barcodeScanner = null;
-let qrScanner = null;
+let barcodeReader = new ZXing.BrowserMultiFormatReader();
+let qrReader = new ZXing.BrowserMultiFormatReader();
+let barcodeStream = null;
+let qrStream = null;
 
-// Function to start barcode scanning
-function startBarcodeScanner() {
-    if (barcodeScanner) {
-        barcodeScanner.clear();
+// Function to start barcode scanner
+async function startBarcodeScanner() {
+    try {
+        const devices = await barcodeReader.getVideoInputDevices();
+        const rearCamera = devices.find(device => device.label.toLowerCase().includes('back')) || devices[0];
+
+        barcodeStream = barcodeReader.decodeFromVideoDevice(rearCamera.deviceId, "barcodeScanner", (result, err) => {
+            if (result) {
+                barcodeValue = result.text;
+                document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
+                barcodeReader.reset();
+            }
+        });
+    } catch (error) {
+        console.error("Barcode Scanner Error:", error);
     }
+}
 
-    barcodeScanner = new Html5QrcodeScanner(
-        "barcodeScanner",
-        { fps: 10, qrbox: 250 },
-        false
-    );
+// Function to start QR scanner
+async function startQRScanner() {
+    try {
+        const devices = await qrReader.getVideoInputDevices();
+        const rearCamera = devices.find(device => device.label.toLowerCase().includes('back')) || devices[0];
 
-    barcodeScanner.render(result => {
-        barcodeValue = result;
-        document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
-        barcodeScanner.clear();
-    }, errorMessage => {
-        console.log("Barcode scanning error: ", errorMessage);
-    });
+        qrStream = qrReader.decodeFromVideoDevice(rearCamera.deviceId, "qrScanner", (result, err) => {
+            if (result) {
+                qrCodeValue = result.text;
+                document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
+                qrReader.reset();
+            }
+        });
+    } catch (error) {
+        console.error("QR Scanner Error:", error);
+    }
 }
 
 // Function to update selected Province
 function updateProvince() {
     selectedProvince = document.getElementById("ProvinceSelect").value;
-}
-
-// Function to start QR code scanning
-function startQrScanner() {
-    if (qrScanner) {
-        qrScanner.clear();
-    }
-
-    qrScanner = new Html5QrcodeScanner(
-        "qrScanner",
-        { fps: 10, qrbox: 250 },
-        false
-    );
-
-    qrScanner.render(result => {
-        qrCodeValue = result;
-        document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
-        qrScanner.clear();
-    }, errorMessage => {
-        console.log("QR scanning error: ", errorMessage);
-    });
 }
 
 // Function to validate match
@@ -65,24 +61,15 @@ function validateMatch() {
     }
 }
 
-// Function to stop all scanning
-function stopScanning() {
-    if (barcodeScanner) {
-        barcodeScanner.clear();
-    }
-    if (qrScanner) {
-        qrScanner.clear();
-    }
-}
-
-// Refresh button stops scanning and reloads the page
-document.getElementById("refreshButton").addEventListener("click", function() {
-    stopScanning();
+// Refresh Button: Stops scanner & reloads page
+document.getElementById("refreshButton").addEventListener("click", function () {
+    if (barcodeStream) barcodeReader.reset();
+    if (qrStream) qrReader.reset();
     location.reload();
 });
 
-// Start scanning when button is pressed
-document.getElementById("startScanning").addEventListener("click", function() {
+// Auto-start scanners on page load
+window.onload = function () {
     startBarcodeScanner();
-    startQrScanner();
-});
+    startQRScanner();
+};
