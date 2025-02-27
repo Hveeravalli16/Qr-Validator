@@ -8,51 +8,72 @@ let qrStream = null;
 
 // Function to get the default rear camera
 async function getRearCamera() {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const videoDevices = devices.filter(device => device.kind === 'videoinput');
-    
-    const rearCamera = videoDevices.find(device => device.label.toLowerCase().includes('back')) || videoDevices[0];
+    try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        
+        if (videoDevices.length === 0) {
+            document.getElementById("errorMessage").innerText = "No camera found!";
+            return null;
+        }
 
-    if (!rearCamera) {
-        document.getElementById("errorMessage").innerText = "No camera found!";
+        // Prefer rear camera if available
+        const rearCamera = videoDevices.find(device => device.label.toLowerCase().includes('back')) || videoDevices[0];
+
+        return rearCamera.deviceId;
+    } catch (error) {
+        console.error("Error getting rear camera:", error);
+        document.getElementById("errorMessage").innerText = "Camera access denied!";
         return null;
     }
-
-    return rearCamera.deviceId;
 }
 
 // Function to start barcode scanner
 async function startBarcodeScanner() {
-    const deviceId = await getRearCamera();
-    if (!deviceId) return;
-
-    barcodeReader.decodeFromVideoDevice(deviceId, "barcodeScanner", (result, err) => {
-        if (result) {
-            barcodeValue = result.text;
-            document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
+    try {
+        if (barcodeStream) {
             barcodeReader.reset();
         }
-    }).catch(error => {
-        document.getElementById("errorMessage").innerText = "Error starting barcode scanner!";
+
+        const deviceId = await getRearCamera();
+        if (!deviceId) return;
+
+        barcodeReader.decodeFromVideoDevice(deviceId, "barcodeScanner", (result, err) => {
+            if (result) {
+                barcodeValue = result.text;
+                document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
+                barcodeReader.reset();
+            }
+        });
+
+    } catch (error) {
         console.error("Barcode Scanner Error:", error);
-    });
+        document.getElementById("errorMessage").innerText = "Error starting barcode scanner!";
+    }
 }
 
 // Function to start QR scanner
 async function startQRScanner() {
-    const deviceId = await getRearCamera();
-    if (!deviceId) return;
-
-    qrReader.decodeFromVideoDevice(deviceId, "qrScanner", (result, err) => {
-        if (result) {
-            qrCodeValue = result.text;
-            document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
+    try {
+        if (qrStream) {
             qrReader.reset();
         }
-    }).catch(error => {
-        document.getElementById("errorMessage").innerText = "Error starting QR scanner!";
+
+        const deviceId = await getRearCamera();
+        if (!deviceId) return;
+
+        qrReader.decodeFromVideoDevice(deviceId, "qrScanner", (result, err) => {
+            if (result) {
+                qrCodeValue = result.text;
+                document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
+                qrReader.reset();
+            }
+        });
+
+    } catch (error) {
         console.error("QR Scanner Error:", error);
-    });
+        document.getElementById("errorMessage").innerText = "Error starting QR scanner!";
+    }
 }
 
 // Function to update selected Province
@@ -76,7 +97,11 @@ function validateMatch() {
 
 // Refresh Button: Stops scanner & reloads page
 document.getElementById("refreshButton").addEventListener("click", function () {
-    if (barcodeStream) barcodeReader.reset();
-    if (qrStream) qrReader.reset();
+    if (barcodeReader) barcodeReader.reset();
+    if (qrReader) qrReader.reset();
     location.reload();
 });
+
+// Attach event listeners for buttons
+document.getElementById("startBarcodeScan").addEventListener("click", startBarcodeScanner);
+document.getElementById("startQRScan").addEventListener("click", startQRScanner);
