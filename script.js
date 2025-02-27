@@ -6,40 +6,53 @@ let qrReader = new ZXing.BrowserMultiFormatReader();
 let barcodeStream = null;
 let qrStream = null;
 
+// Function to get the default rear camera
+async function getRearCamera() {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const videoDevices = devices.filter(device => device.kind === 'videoinput');
+    
+    const rearCamera = videoDevices.find(device => device.label.toLowerCase().includes('back')) || videoDevices[0];
+
+    if (!rearCamera) {
+        document.getElementById("errorMessage").innerText = "No camera found!";
+        return null;
+    }
+
+    return rearCamera.deviceId;
+}
+
 // Function to start barcode scanner
 async function startBarcodeScanner() {
-    try {
-        const devices = await barcodeReader.getVideoInputDevices();
-        const rearCamera = devices.find(device => device.label.toLowerCase().includes('back')) || devices[0];
+    const deviceId = await getRearCamera();
+    if (!deviceId) return;
 
-        barcodeStream = barcodeReader.decodeFromVideoDevice(rearCamera.deviceId, "barcodeScanner", (result, err) => {
-            if (result) {
-                barcodeValue = result.text;
-                document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
-                barcodeReader.reset();
-            }
-        });
-    } catch (error) {
+    barcodeReader.decodeFromVideoDevice(deviceId, "barcodeScanner", (result, err) => {
+        if (result) {
+            barcodeValue = result.text;
+            document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
+            barcodeReader.reset();
+        }
+    }).catch(error => {
+        document.getElementById("errorMessage").innerText = "Error starting barcode scanner!";
         console.error("Barcode Scanner Error:", error);
-    }
+    });
 }
 
 // Function to start QR scanner
 async function startQRScanner() {
-    try {
-        const devices = await qrReader.getVideoInputDevices();
-        const rearCamera = devices.find(device => device.label.toLowerCase().includes('back')) || devices[0];
+    const deviceId = await getRearCamera();
+    if (!deviceId) return;
 
-        qrStream = qrReader.decodeFromVideoDevice(rearCamera.deviceId, "qrScanner", (result, err) => {
-            if (result) {
-                qrCodeValue = result.text;
-                document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
-                qrReader.reset();
-            }
-        });
-    } catch (error) {
+    qrReader.decodeFromVideoDevice(deviceId, "qrScanner", (result, err) => {
+        if (result) {
+            qrCodeValue = result.text;
+            document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
+            qrReader.reset();
+        }
+    }).catch(error => {
+        document.getElementById("errorMessage").innerText = "Error starting QR scanner!";
         console.error("QR Scanner Error:", error);
-    }
+    });
 }
 
 // Function to update selected Province
@@ -67,9 +80,3 @@ document.getElementById("refreshButton").addEventListener("click", function () {
     if (qrStream) qrReader.reset();
     location.reload();
 });
-
-// Auto-start scanners on page load
-window.onload = function () {
-    startBarcodeScanner();
-    startQRScanner();
-};

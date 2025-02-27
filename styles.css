@@ -1,46 +1,36 @@
-body { 
-    text-align: center; 
-    font-family: Arial, sans-serif; 
-    background-color: #f4f4f4; 
-    padding: 20px; 
-}
-
-h2, h3 { 
-    color: #333; 
-}
-
-select, button { 
-    margin: 10px; 
-    padding: 10px; 
-    font-size: 16px; 
-    border: 1px solid #ddd; 
-    border-radius: 5px; 
-    cursor: pointer; 
-}
-
-button { 
-    background-color: #007bff; 
-    color: white; 
-}
-
-button:hover { 
-    background-color: #0056b3; 
-}
-
-#validationResult { 
-    font-size: 24px; 
-    font-weight: bold; 
-    margin-block-start: 20px; 
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
 }
 
 #logo {
-block-size: 200px;
-inline-size: 350px;
-text-align: center;
+    inline-size: 350px;
+    display: block;
+    margin: 0 auto;
 }
 
-#barcodeScanner, #qrScanner {
-    inline-size: 80%;
-    max-inline-size: 350px;
-    margin: auto;
+video {
+    inline-size: 100%;
+    max-inline-size: 400px;
+    border: 2px solid #ddd;
+    margin-block-start: 10px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-block-start: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+select {
+    padding: 5px;
+    margin: 10px 0;
 }

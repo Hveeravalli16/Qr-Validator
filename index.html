@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR & Barcode Validator</title>
+    <title>STLTH Qr Validator</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@zxing/library@latest"></script>
     <script src="script.js" defer></script>
@@ -15,9 +15,9 @@
 
     <!-- Barcode Scanner -->
     <h3>Scan Barcode</h3>
-    <video id="barcodeScanner" style="inline-size: 100%;"></video>
+    <video id="barcodeScanner" autoplay playsinline></video>
     <p id="barcodeValue">Barcode: Not scanned</p>
-    <button onclick="startBarcodeScanner()">Start Scanning</button>
+    <button onclick="startBarcodeScanner()">Start Barcode Scan</button>
 
     <!-- Dropdown for Province Selection -->
     <h3>Select Province</h3>
@@ -36,9 +36,9 @@
 
     <!-- QR Code Scanner -->
     <h3>Scan QR Code</h3>
-    <video id="qrScanner" style="inline-size: 100%;"></video>
+    <video id="qrScanner" autoplay playsinline></video>
     <p id="qrCodeValue">QR Code: Not scanned</p>
-    <button onclick="startQRScanner()">Start Scanning</button>
+    <button onclick="startQRScanner()">Start QR Scan</button>
 
     <!-- Validate Match -->
     <button onclick="validateMatch()">Validate</button>
@@ -46,5 +46,7 @@
 
     <!-- Refresh Button -->
     <button id="refreshButton">Refresh Page</button>
+
+    <p id="errorMessage" style="color: red;"></p>
 </body>
 </html>
