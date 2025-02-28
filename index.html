@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STLTH QR Validator</title>
+    <title>QR Validator</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" defer></script>
     <script src="script.js" defer></script>
 </head>
 <body>
-    <img src="images/STLTH_LOGO_600x.webp" alt="STLTH" id="logo">
-    
-    <h2>BatchCode & QR Validator</h2>
+    <img src="./images/LOGO_600x.webp" alt="Logo" id="logo">
+
+    <h2>Batch Code & QR Validator</h2>
+
+    <button id="startScanning">Start Scanning</button>
 
     <!-- Barcode Scanner -->
     <h3>Scan Barcode</h3>
     <div id="barcodeScanner"></div>
     <p id="barcodeValue">Barcode: Not scanned</p>
-    <button id="startBarcodeScan">Start Barcode Scan</button>
 
     <!-- Dropdown for Province Selection -->
     <h3>Select Province</h3>
@@ -38,15 +39,11 @@
     <h3>Scan QR Code</h3>
     <div id="qrScanner"></div>
     <p id="qrCodeValue">QR Code: Not scanned</p>
-    <button id="startQRScan">Start QR Scan</button>
 
     <!-- Validate Match -->
     <button onclick="validateMatch()">Validate</button>
     <p id="validationResult"></p>
 
-    <!-- Refresh Button -->
     <button id="refreshButton">Refresh Page</button>
-
-    <p id="errorMessage" style="color: red;"></p>
 </body>
 </html>

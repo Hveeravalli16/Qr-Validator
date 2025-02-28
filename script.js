@@ -1,47 +1,27 @@
-let scannedValue = "";
+let barcodeValue = "";
 let selectedProvince = "";
+let qrCodeValue = "";
+let barcodeScanner = null;
+let qrScanner = null;
 
-// Request camera permission
-async function requestCameraAccess() {
-    try {
-        console.log("Requesting camera access...");
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        stream.getTracks().forEach(track => track.stop()); // Stop immediately
-        console.log("Camera access granted!");
-    } catch (error) {
-        console.error("Camera permission denied:", error);
-        document.getElementById("errorMessage").innerText = "Camera permission is required!";
+// Function to start barcode scanning
+function startBarcodeScanner() {
+    if (barcodeScanner) {
+        barcodeScanner.clear();
     }
-}
 
-// Start QuaggaJS scanner
-function startScanner() {
-    console.log("Starting scanner...");
-    Quagga.init({
-        inputStream: {
-            name: "Live",
-            type: "LiveStream",
-            target: document.querySelector("#scanner"),
-            constraints: {
-                facingMode: "environment", // Use rear camera
-            },
-        },
-        decoder: {
-            readers: ["code_128_reader", "ean_reader", "ean_8_reader", "qr_reader"], // Supports barcodes & QR codes
-        },
-    }, function(err) {
-        if (err) {
-            console.error("QuaggaJS Error:", err);
-            document.getElementById("errorMessage").innerText = "Error starting scanner!";
-            return;
-        }
-        Quagga.start();
-    });
+    barcodeScanner = new Html5QrcodeScanner(
+        "barcodeScanner",
+        { fps: 10, qrbox: 250 },
+        false
+    );
 
-    Quagga.onDetected(function(data) {
-        scannedValue = data.codeResult.code;
-        document.getElementById("scannedValue").innerText = `Scanned Code: ${scannedValue}`;
-        Quagga.stop();
+    barcodeScanner.render(result => {
+        barcodeValue = result;
+        document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
+        barcodeScanner.clear();
+    }, errorMessage => {
+        console.log("Barcode scanning error: ", errorMessage);
     });
 }
 
@@ -50,12 +30,33 @@ function updateProvince() {
     selectedProvince = document.getElementById("ProvinceSelect").value;
 }
 
+// Function to start QR code scanning
+function startQrScanner() {
+    if (qrScanner) {
+        qrScanner.clear();
+    }
+
+    qrScanner = new Html5QrcodeScanner(
+        "qrScanner",
+        { fps: 10, qrbox: 250 },
+        false
+    );
+
+    qrScanner.render(result => {
+        qrCodeValue = result;
+        document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
+        qrScanner.clear();
+    }, errorMessage => {
+        console.log("QR scanning error: ", errorMessage);
+    });
+}
+
 // Function to validate match
 function validateMatch() {
-    const modifiedCode = scannedValue + selectedProvince;
+    const modifiedBarcode = barcodeValue + selectedProvince;
     const resultElement = document.getElementById("validationResult");
 
-    if (modifiedCode === scannedValue) {
+    if (modifiedBarcode === qrCodeValue) {
         resultElement.innerText = "Match ✅";
         resultElement.style.color = "green";
     } else {
@@ -64,15 +65,24 @@ function validateMatch() {
     }
 }
 
-// Refresh Button: Stops scanner & reloads page
-document.getElementById("refreshButton").addEventListener("click", function () {
-    console.log("Stopping scanner and refreshing page...");
-    Quagga.stop();
+// Function to stop all scanning
+function stopScanning() {
+    if (barcodeScanner) {
+        barcodeScanner.clear();
+    }
+    if (qrScanner) {
+        qrScanner.clear();
+    }
+}
+
+// Refresh button stops scanning and reloads the page
+document.getElementById("refreshButton").addEventListener("click", function() {
+    stopScanning();
     location.reload();
 });
 
-// Start scan on button click
-document.getElementById("startScan").addEventListener("click", async () => {
-    await requestCameraAccess();
-    startScanner();
+// Start scanning when button is pressed
+document.getElementById("startScanning").addEventListener("click", function() {
+    startBarcodeScanner();
+    startQrScanner();
 });
