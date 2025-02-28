@@ -6,40 +6,18 @@ let qrReader = new ZXing.BrowserMultiFormatReader();
 let barcodeStream = null;
 let qrStream = null;
 
-// Function to get the default rear camera
-async function getRearCamera() {
-    try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
-        
-        if (videoDevices.length === 0) {
-            document.getElementById("errorMessage").innerText = "No camera found!";
-            return null;
-        }
-
-        // Prefer rear camera if available
-        const rearCamera = videoDevices.find(device => device.label.toLowerCase().includes('back')) || videoDevices[0];
-
-        return rearCamera.deviceId;
-    } catch (error) {
-        console.error("Error getting rear camera:", error);
-        document.getElementById("errorMessage").innerText = "Camera access denied!";
-        return null;
-    }
-}
-
 // Function to start barcode scanner
 async function startBarcodeScanner() {
+    console.log("Starting barcode scanner...");
     try {
         if (barcodeStream) {
             barcodeReader.reset();
+            barcodeStream = null;
         }
 
-        const deviceId = await getRearCamera();
-        if (!deviceId) return;
-
-        barcodeReader.decodeFromVideoDevice(deviceId, "barcodeScanner", (result, err) => {
+        barcodeStream = await barcodeReader.decodeFromVideoDevice(null, "barcodeScanner", (result, err) => {
             if (result) {
+                console.log("Barcode scanned:", result.text);
                 barcodeValue = result.text;
                 document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
                 barcodeReader.reset();
@@ -54,16 +32,16 @@ async function startBarcodeScanner() {
 
 // Function to start QR scanner
 async function startQRScanner() {
+    console.log("Starting QR scanner...");
     try {
         if (qrStream) {
             qrReader.reset();
+            qrStream = null;
         }
 
-        const deviceId = await getRearCamera();
-        if (!deviceId) return;
-
-        qrReader.decodeFromVideoDevice(deviceId, "qrScanner", (result, err) => {
+        qrStream = await qrReader.decodeFromVideoDevice(null, "qrScanner", (result, err) => {
             if (result) {
+                console.log("QR Code scanned:", result.text);
                 qrCodeValue = result.text;
                 document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
                 qrReader.reset();
@@ -97,6 +75,7 @@ function validateMatch() {
 
 // Refresh Button: Stops scanner & reloads page
 document.getElementById("refreshButton").addEventListener("click", function () {
+    console.log("Stopping scanners and refreshing page...");
     if (barcodeReader) barcodeReader.reset();
     if (qrReader) qrReader.reset();
     location.reload();

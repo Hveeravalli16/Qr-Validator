@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STLTH QR Validator</title>
+    <title>QR & Barcode Validator</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@zxing/library@latest"></script>
     <script src="script.js" defer></script>
 </head>
 <body>
-    <img src="images/STLTH_LOGO_600x.webp" alt="Logo" id="logo">
+    <img src="./images/LOGO_600x.webp" alt="Logo" id="logo">
     
     <h2>BatchCode & QR Validator</h2>
 
     <!-- Barcode Scanner -->
     <h3>Scan Barcode</h3>
-    <video id="barcodeScanner" autoplay playsinline></video>
+    <div id="barcodeScannerContainer">
+        <video id="barcodeScanner" autoplay playsinline></video>
+    </div>
     <p id="barcodeValue">Barcode: Not scanned</p>
     <button id="startBarcodeScan">Start Barcode Scan</button>
 
@@ -36,7 +38,9 @@
 
     <!-- QR Code Scanner -->
     <h3>Scan QR Code</h3>
-    <video id="qrScanner" autoplay playsinline></video>
+    <div id="qrScannerContainer">
+        <video id="qrScanner" autoplay playsinline></video>
+    </div>
     <p id="qrCodeValue">QR Code: Not scanned</p>
     <button id="startQRScan">Start QR Scan</button>
 
