@@ -1,12 +1,8 @@
 let barcodeValue = "";
 let selectedProvince = "";
 let qrCodeValue = "";
-let barcodeReader = new ZXing.BrowserMultiFormatReader();
-let qrReader = new ZXing.BrowserMultiFormatReader();
-let barcodeStream = null;
-let qrStream = null;
 
-// Function to request camera access
+// Request camera permission
 async function requestCameraAccess() {
     try {
         console.log("Requesting camera access...");
@@ -19,40 +15,49 @@ async function requestCameraAccess() {
     }
 }
 
-// Function to start barcode scanner
-async function startBarcodeScanner() {
+// Start barcode scanner using QuaggaJS
+function startBarcodeScanner() {
     console.log("Starting barcode scanner...");
-    try {
-        barcodeStream = await barcodeReader.decodeFromVideoDevice(null, "barcodeScanner", (result, err) => {
-            if (result) {
-                console.log("Barcode scanned:", result.text);
-                barcodeValue = result.text;
-                document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
-                barcodeReader.reset();
-            }
-        });
-    } catch (error) {
-        console.error("Barcode Scanner Error:", error);
-        document.getElementById("errorMessage").innerText = "Error starting barcode scanner!";
-    }
+    Quagga.init({
+        inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: document.querySelector("#barcodeScanner"),
+            constraints: {
+                facingMode: "environment", // Use rear camera
+            },
+        },
+        decoder: {
+            readers: ["code_128_reader", "ean_reader", "ean_8_reader"],
+        },
+    }, function(err) {
+        if (err) {
+            console.error("QuaggaJS Error:", err);
+            document.getElementById("errorMessage").innerText = "Error starting barcode scanner!";
+            return;
+        }
+        Quagga.start();
+    });
+
+    Quagga.onDetected(function(data) {
+        barcodeValue = data.codeResult.code;
+        document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
+        Quagga.stop();
+    });
 }
 
-// Function to start QR scanner
-async function startQRScanner() {
+// Start QR scanner using ZXing
+function startQRScanner() {
     console.log("Starting QR scanner...");
-    try {
-        qrStream = await qrReader.decodeFromVideoDevice(null, "qrScanner", (result, err) => {
-            if (result) {
-                console.log("QR Code scanned:", result.text);
-                qrCodeValue = result.text;
-                document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
-                qrReader.reset();
-            }
-        });
-    } catch (error) {
-        console.error("QR Scanner Error:", error);
-        document.getElementById("errorMessage").innerText = "Error starting QR scanner!";
-    }
+    const qrReader = new ZXing.BrowserQRCodeReader();
+    qrReader.decodeFromVideoDevice(null, "qrScanner", (result, err) => {
+        if (result) {
+            console.log("QR Code scanned:", result.text);
+            qrCodeValue = result.text;
+            document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
+            qrReader.reset();
+        }
+    });
 }
 
 // Function to update selected Province
@@ -77,8 +82,7 @@ function validateMatch() {
 // Refresh Button: Stops scanner & reloads page
 document.getElementById("refreshButton").addEventListener("click", function () {
     console.log("Stopping scanners and refreshing page...");
-    if (barcodeReader) barcodeReader.reset();
-    if (qrReader) qrReader.reset();
+    Quagga.stop();
     location.reload();
 });
 
