@@ -6,15 +6,23 @@ let qrReader = new ZXing.BrowserMultiFormatReader();
 let barcodeStream = null;
 let qrStream = null;
 
+// Function to request camera access
+async function requestCameraAccess() {
+    try {
+        console.log("Requesting camera access...");
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        stream.getTracks().forEach(track => track.stop()); // Stop it immediately
+        console.log("Camera access granted!");
+    } catch (error) {
+        console.error("Camera permission denied:", error);
+        document.getElementById("errorMessage").innerText = "Camera permission is required!";
+    }
+}
+
 // Function to start barcode scanner
 async function startBarcodeScanner() {
     console.log("Starting barcode scanner...");
     try {
-        if (barcodeStream) {
-            barcodeReader.reset();
-            barcodeStream = null;
-        }
-
         barcodeStream = await barcodeReader.decodeFromVideoDevice(null, "barcodeScanner", (result, err) => {
             if (result) {
                 console.log("Barcode scanned:", result.text);
@@ -23,7 +31,6 @@ async function startBarcodeScanner() {
                 barcodeReader.reset();
             }
         });
-
     } catch (error) {
         console.error("Barcode Scanner Error:", error);
         document.getElementById("errorMessage").innerText = "Error starting barcode scanner!";
@@ -34,11 +41,6 @@ async function startBarcodeScanner() {
 async function startQRScanner() {
     console.log("Starting QR scanner...");
     try {
-        if (qrStream) {
-            qrReader.reset();
-            qrStream = null;
-        }
-
         qrStream = await qrReader.decodeFromVideoDevice(null, "qrScanner", (result, err) => {
             if (result) {
                 console.log("QR Code scanned:", result.text);
@@ -47,7 +49,6 @@ async function startQRScanner() {
                 qrReader.reset();
             }
         });
-
     } catch (error) {
         console.error("QR Scanner Error:", error);
         document.getElementById("errorMessage").innerText = "Error starting QR scanner!";
@@ -82,5 +83,12 @@ document.getElementById("refreshButton").addEventListener("click", function () {
 });
 
 // Attach event listeners for buttons
-document.getElementById("startBarcodeScan").addEventListener("click", startBarcodeScanner);
-document.getElementById("startQRScan").addEventListener("click", startQRScanner);
+document.getElementById("startBarcodeScan").addEventListener("click", async () => {
+    await requestCameraAccess();
+    startBarcodeScanner();
+});
+
+document.getElementById("startQRScan").addEventListener("click", async () => {
+    await requestCameraAccess();
+    startQRScanner();
+});
