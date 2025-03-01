@@ -44,7 +44,7 @@ function startQrScanner() {
 
     qrScanner.render(result => {
         qrCodeValue = result;
-        document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
+        document.getElementById("qrCodeValue").input = `${qrCodeValue}`;
         qrScanner.clear();
     }, errorMessage => {
         console.log("QR scanning error: ", errorMessage);
