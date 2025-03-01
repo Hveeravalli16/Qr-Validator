@@ -16,8 +16,9 @@
     <button id="startScanning">Start Scanning</button>
 
     <!-- Barcode Scanner -->
-    <h3>Enter or Scan Barcode</h3>
-    <input type="text" id="barcodeInput" placeholder="Scan or enter barcode">
+    <h3>Scan Barcode</h3>
+    <div id="barcodeScanner"></div>
+    <p id="barcodeValue">Barcode: Not scanned</p>
 
     <!-- Dropdown for Province Selection -->
     <h3>Select Province</h3>
@@ -35,8 +36,9 @@
     </select>
 
     <!-- QR Code Scanner -->
-    <h3>Enter or Scan QR Code</h3>
-    <input type="text" id="qrCodeInput" placeholder="Scan or enter QR Code"><br><br>
+    <h3>Scan QR Code</h3>
+    <div id="qrScanner"></div>
+    <p id="qrCodeValue">QR Code: Not scanned</p>
 
     <!-- Validate Match -->
     <button onclick="validateMatch()">Validate</button>

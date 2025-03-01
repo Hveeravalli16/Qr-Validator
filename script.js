@@ -18,7 +18,7 @@ function startBarcodeScanner() {
 
     barcodeScanner.render(result => {
         barcodeValue = result;
-        document.getElementById("barcodeInput").value = barcodeValue; // Autofill textbox
+        document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
         barcodeScanner.clear();
     }, errorMessage => {
         console.log("Barcode scanning error: ", errorMessage);
@@ -44,7 +44,7 @@ function startQrScanner() {
 
     qrScanner.render(result => {
         qrCodeValue = result;
-        document.getElementById("qrCodeInput").value = qrCodeValue; // Autofill textbox
+        document.getElementById("qrCodeValue").innerText = `QR Code: ${qrCodeValue}`;
         qrScanner.clear();
     }, errorMessage => {
         console.log("QR scanning error: ", errorMessage);
@@ -53,12 +53,10 @@ function startQrScanner() {
 
 // Function to validate match
 function validateMatch() {
-    let barcodeText = document.getElementById("barcodeInput").value.trim();
-    let qrCodeText = document.getElementById("qrCodeInput").value.trim();
-    const modifiedBarcode = barcodeText + selectedProvince;
+    const modifiedBarcode = barcodeValue + selectedProvince;
     const resultElement = document.getElementById("validationResult");
 
-    if (modifiedBarcode === qrCodeText) {
+    if (modifiedBarcode === qrCodeValue) {
         resultElement.innerText = "Match ✅";
         resultElement.style.color = "green";
     } else {
