@@ -3,9 +3,9 @@ body {
     text-align: center;
     padding: 20px;
     background-image: url('images/background.jpeg');
-    background-size:auto;
+   /* background-size:auto;
     background-attachment: fixed;
-    background-position: 100%;
+    background-position: 100%;*/
 }
 
 #logo {
