@@ -43,7 +43,7 @@ function startQrScanner() {
     );
 
     qrScanner.render(result => {
-        qrCodeValue = result;
+        qrCodeValue = result || input;
         document.getElementById("qrCodeValue").input = `${qrCodeValue}`;
         qrScanner.clear();
     }, errorMessage => {
