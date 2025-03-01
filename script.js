@@ -43,8 +43,8 @@ function startQrScanner() {
     );
 
     qrScanner.render(result => {
-        qrCodeValue = result || input;
-        document.getElementById("qrCodeValue").input = `${qrCodeValue}`;
+        qrCodeValue = result;
+        document.getElementById("qrCodeValue").innerText = `${qrCodeValue}`;
         qrScanner.clear();
     }, errorMessage => {
         console.log("QR scanning error: ", errorMessage);
