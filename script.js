@@ -91,5 +91,5 @@ document.getElementById("refreshButton").addEventListener("click", function() {
 // Start scanning when button is pressed
 document.getElementById("startScanning").addEventListener("click", function() {
     startBarcodeScanner();
-    //startQrScanner();
+    startQrScanner();
 });
