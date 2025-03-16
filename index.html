@@ -13,9 +13,8 @@
 
     <h2>Batch Code & QR Validator</h2>
 
-    <!-- Buttons for Individual Scanner Activation -->
     <button id="startBarcodeScanning">Start Barcode Scanner</button>
-    <button id="startQrScanning">Start QR Scanner</button>
+    
 
     <!-- Barcode Scanner -->
     <h3>Enter or Scan Barcode</h3>
@@ -26,17 +25,19 @@
     <h3>Select Province</h3>
     <select id="ProvinceSelect" onchange="updateProvince()">
         <option value="">-- Select Province --</option>
-        <option value="CA">CA</option>
-        <option value="FD">FD</option>
-        <option value="ON">ON</option>
-        <option value="QC">QC</option>
-        <option value="AB">AB</option>
-        <option value="PE">PE</option>
-        <option value="MB">MB</option>
-        <option value="NU">NU</option>
-        <option value="NB">NB</option>
+        <option value="CA">CANADA</option>
+        <option value="ON">ONTARIO</option>
+        <option value="QC">QUEBEC</option>
+        <option value="AB">ALBERTA</option>
+        <option value="MB">MANITOBA</option>
+        <option value="PE">PEI</option>
+        <option value="NU">NUNAVUT</option>
+        <option value="NB">NEW BRUNSWICK</option>
+        <option value="YT">YUKON</option>
+        <option value="NT">NORTHWEST TERRITORIES</option>
     </select>
 
+    <button id="startQrScanning">Start QR Scanner</button>
     <!-- QR Code Scanner -->
     <h3>Enter or Scan QR Code</h3>
     <input type="text" id="qrCodeInput" placeholder="Scan or enter QR Code">
