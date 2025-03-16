@@ -9,17 +9,18 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <a href="/Qr-Validator"><img src="images/STLTH_LOGO_600x.webp" alt="Logo" id="logo"></a>
-    
+    <img src="images/STLTH_LOGO_600x.webp" alt="Logo" id="logo">
 
     <h2>Batch Code & QR Validator</h2>
 
-    <button id="startScanning">Start Scanning</button>
+    <!-- Buttons for Individual Scanner Activation -->
+    <button id="startBarcodeScanning">Start Barcode Scanner</button>
+    <button id="startQrScanning">Start QR Scanner</button>
 
     <!-- Barcode Scanner -->
-    <h3>Scan Barcode</h3>
+    <h3>Enter or Scan Barcode</h3>
+    <input type="text" id="barcodeInput" placeholder="Scan or enter barcode">
     <div id="barcodeScanner"></div>
-    <p id="barcodeValue">Barcode: Not scanned</p>
 
     <!-- Dropdown for Province Selection -->
     <h3>Select Province</h3>
@@ -37,16 +38,17 @@
     </select>
 
     <!-- QR Code Scanner -->
-    <h3>Scan QR Code</h3>
+    <h3>Enter or Scan QR Code</h3>
+    <input type="text" id="qrCodeInput" placeholder="Scan or enter QR Code">
     <div id="qrScanner"></div>
-    <p id="qrCodeValue">QR Code: Not scanned</p>
-    
+
     <!-- Validate Match -->
     <button onclick="validateMatch()">Validate</button>
     <p id="validationResult"></p>
 
-    <button id="refreshButton">Scan another Product</button>
+    <button id="refreshButton">Refresh Page</button>
 </body>
 
 <footer>&copy 2025 | Sri Harsha Veeravalli</footer>
+
 </html>

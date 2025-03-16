@@ -6,7 +6,7 @@ let qrScanner = null;
 
 // Function to start barcode scanning
 function startBarcodeScanner() {
-    stopScanning(); // Stop any active scanner before starting a new one
+    stopScanning(); // Stops any active scanner before starting a new one
 
     barcodeScanner = new Html5QrcodeScanner(
         "barcodeScanner",
@@ -16,21 +16,16 @@ function startBarcodeScanner() {
 
     barcodeScanner.render(result => {
         barcodeValue = result;
-        document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
+        document.getElementById("barcodeInput").value = barcodeValue;
         stopScanning(); // Stops scanner after successful scan
     }, errorMessage => {
         console.log("Barcode scanning error: ", errorMessage);
     });
 }
 
-// Function to update selected Province
-function updateProvince() {
-    selectedProvince = document.getElementById("ProvinceSelect").value;
-}
-
 // Function to start QR code scanning
 function startQrScanner() {
-    stopScanning(); // Stop any active scanner before starting a new one
+    stopScanning(); // Stops any active scanner before starting a new one
 
     qrScanner = new Html5QrcodeScanner(
         "qrScanner",
@@ -40,7 +35,7 @@ function startQrScanner() {
 
     qrScanner.render(result => {
         qrCodeValue = result;
-        document.getElementById("qrCodeValue").innerText = `${qrCodeValue}`;
+        document.getElementById("qrCodeInput").value = qrCodeValue;
         stopScanning(); // Stops scanner after successful scan
     }, errorMessage => {
         console.log("QR scanning error: ", errorMessage);
@@ -70,10 +65,11 @@ function stopScanning() {
 
 // Function to validate match
 function validateMatch() {
-    const modifiedBarcode = barcodeValue + selectedProvince;
+    const modifiedBarcode = document.getElementById("barcodeInput").value + selectedProvince;
+    const enteredQrCode = document.getElementById("qrCodeInput").value;
     const resultElement = document.getElementById("validationResult");
 
-    if (modifiedBarcode === qrCodeValue) {
+    if (modifiedBarcode === enteredQrCode) {
         resultElement.innerText = "Match ✅";
         resultElement.style.color = "green";
     } else {
@@ -82,14 +78,23 @@ function validateMatch() {
     }
 }
 
+// Function to update selected Province
+function updateProvince() {
+    selectedProvince = document.getElementById("ProvinceSelect").value;
+}
+
 // Refresh button stops scanning and reloads the page
 document.getElementById("refreshButton").addEventListener("click", function() {
     stopScanning();
     location.reload();
 });
 
-// Start scanning when button is pressed
-document.getElementById("startScanning").addEventListener("click", function() {
+// Start barcode scanning
+document.getElementById("startBarcodeScanning").addEventListener("click", function() {
     startBarcodeScanner();
+});
+
+// Start QR code scanning
+document.getElementById("startQrScanning").addEventListener("click", function() {
     startQrScanner();
 });
