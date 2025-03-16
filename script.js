@@ -16,11 +16,16 @@ function startBarcodeScanner() {
 
     barcodeScanner.render(result => {
         barcodeValue = result;
-        document.getElementById("barcodeInput").value = barcodeValue;
+        document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
         stopScanning(); // Stops scanner after successful scan
     }, errorMessage => {
         console.log("Barcode scanning error: ", errorMessage);
     });
+}
+
+// Function to update selected Province
+function updateProvince() {
+    selectedProvince = document.getElementById("ProvinceSelect").value;
 }
 
 // Function to start QR code scanning
@@ -35,7 +40,7 @@ function startQrScanner() {
 
     qrScanner.render(result => {
         qrCodeValue = result;
-        document.getElementById("qrCodeInput").value = qrCodeValue;
+        document.getElementById("qrCodeValue").innerText = `${qrCodeValue}`;
         stopScanning(); // Stops scanner after successful scan
     }, errorMessage => {
         console.log("QR scanning error: ", errorMessage);
@@ -65,22 +70,16 @@ function stopScanning() {
 
 // Function to validate match
 function validateMatch() {
-    const modifiedBarcode = document.getElementById("barcodeInput").value + selectedProvince;
-    const enteredQrCode = document.getElementById("qrCodeInput").value;
+    const modifiedBarcode = barcodeValue + selectedProvince;
     const resultElement = document.getElementById("validationResult");
 
-    if (modifiedBarcode === enteredQrCode) {
+    if (modifiedBarcode === qrCodeValue) {
         resultElement.innerText = "Match ✅";
         resultElement.style.color = "green";
     } else {
         resultElement.innerText = "No Match ❌";
         resultElement.style.color = "red";
     }
-}
-
-// Function to update selected Province
-function updateProvince() {
-    selectedProvince = document.getElementById("ProvinceSelect").value;
 }
 
 // Refresh button stops scanning and reloads the page
@@ -91,5 +90,6 @@ document.getElementById("refreshButton").addEventListener("click", function() {
 
 // Start scanning when button is pressed
 document.getElementById("startScanning").addEventListener("click", function() {
-    startBarcodeScanner(); // Starts barcode scanner by default
+    startBarcodeScanner();
+    //startQrScanner();
 });
