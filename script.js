@@ -6,9 +6,7 @@ let qrScanner = null;
 
 // Function to start barcode scanning
 function startBarcodeScanner() {
-    if (barcodeScanner) {
-        barcodeScanner.clear();
-    }
+    stopScanning(); // Stop any active scanner before starting a new one
 
     barcodeScanner = new Html5QrcodeScanner(
         "barcodeScanner",
@@ -18,23 +16,16 @@ function startBarcodeScanner() {
 
     barcodeScanner.render(result => {
         barcodeValue = result;
-        document.getElementById("barcodeValue").innerText = `Barcode: ${barcodeValue}`;
-        barcodeScanner.clear();
+        document.getElementById("barcodeInput").value = barcodeValue;
+        stopScanning(); // Stops scanner after successful scan
     }, errorMessage => {
         console.log("Barcode scanning error: ", errorMessage);
     });
 }
 
-// Function to update selected Province
-function updateProvince() {
-    selectedProvince = document.getElementById("ProvinceSelect").value;
-}
-
 // Function to start QR code scanning
 function startQrScanner() {
-    if (qrScanner) {
-        qrScanner.clear();
-    }
+    stopScanning(); // Stop any active scanner before starting a new one
 
     qrScanner = new Html5QrcodeScanner(
         "qrScanner",
@@ -44,19 +35,41 @@ function startQrScanner() {
 
     qrScanner.render(result => {
         qrCodeValue = result;
-        document.getElementById("qrCodeValue").innerText = `${qrCodeValue}`;
-        qrScanner.clear();
+        document.getElementById("qrCodeInput").value = qrCodeValue;
+        stopScanning(); // Stops scanner after successful scan
     }, errorMessage => {
         console.log("QR scanning error: ", errorMessage);
     });
 }
 
+// Function to stop all scanners safely
+function stopScanning() {
+    if (barcodeScanner) {
+        try {
+            barcodeScanner.clear();
+        } catch (error) {
+            console.warn("Barcode scanner already cleared or not present.");
+        }
+        barcodeScanner = null;
+    }
+
+    if (qrScanner) {
+        try {
+            qrScanner.clear();
+        } catch (error) {
+            console.warn("QR scanner already cleared or not present.");
+        }
+        qrScanner = null;
+    }
+}
+
 // Function to validate match
 function validateMatch() {
-    const modifiedBarcode = barcodeValue + selectedProvince;
+    const modifiedBarcode = document.getElementById("barcodeInput").value + selectedProvince;
+    const enteredQrCode = document.getElementById("qrCodeInput").value;
     const resultElement = document.getElementById("validationResult");
 
-    if (modifiedBarcode === qrCodeValue) {
+    if (modifiedBarcode === enteredQrCode) {
         resultElement.innerText = "Match ✅";
         resultElement.style.color = "green";
     } else {
@@ -65,14 +78,9 @@ function validateMatch() {
     }
 }
 
-// Function to stop all scanning
-function stopScanning() {
-    if (barcodeScanner) {
-        barcodeScanner.clear();
-    }
-    if (qrScanner) {
-        qrScanner.clear();
-    }
+// Function to update selected Province
+function updateProvince() {
+    selectedProvince = document.getElementById("ProvinceSelect").value;
 }
 
 // Refresh button stops scanning and reloads the page
@@ -83,6 +91,5 @@ document.getElementById("refreshButton").addEventListener("click", function() {
 
 // Start scanning when button is pressed
 document.getElementById("startScanning").addEventListener("click", function() {
-    startBarcodeScanner();
-    startQrScanner();
+    startBarcodeScanner(); // Starts barcode scanner by default
 });
