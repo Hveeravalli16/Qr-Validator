@@ -42,6 +42,12 @@ button {
     border-color: floralwhite;
 }
 
+#validateButton{
+    background-color: red;
+    border-color: red;
+    color: white;
+}
+
 #validationResult {
     font-size: 18px;
     font-weight: bold;
