@@ -13,17 +13,17 @@
 
     <h2>Carton Barcode & QR Validator</h2>
 
-    <button id="startBarcodeScanning">Scan Barcode</button>
+    <button id="startBarcodeScanning" >Scan Barcode</button>
     
 
     <!-- Barcode Scanner -->
     <h3>Enter or Scan Barcode</h3>
-    <input type="text" id="barcodeInput" placeholder="Scan or enter barcode">
+    <input type="text" id="barcodeInput" class="focusable" placeholder="Scan or enter barcode">
     <div id="barcodeScanner"></div>
 
     <!-- Dropdown for Province Selection -->
     <h3>Select Province</h3>
-    <select id="ProvinceSelect" onchange="updateProvince()">
+    <select id="ProvinceSelect" class="focusable" onchange="updateProvince()">
         <option value="">-- Select a Province --</option>
         <option value="CA">CANADA</option>
         <option value="FD">FEDERAL</option>
@@ -41,7 +41,7 @@
     <button id="startQrScanning">Scan QR Code</button>
     <!-- QR Code Scanner -->
     <h3>Enter or Scan QR Code</h3>
-    <input type="text" id="qrCodeInput" placeholder="Scan or enter QR Code">
+    <input type="text" id="qrCodeInput" class="focusable" placeholder="Scan or enter QR Code">
     <div id="qrScanner"></div>
 
     <!-- Validate Match -->

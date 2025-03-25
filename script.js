@@ -21,6 +21,8 @@ function startBarcodeScanner() {
     }, errorMessage => {
         console.log("Barcode scanning error: ", errorMessage);
     });
+
+    document.getElementById("barcodeInput").focus();
 }
 
 // Function to start QR code scanning
@@ -40,6 +42,8 @@ function startQrScanner() {
     }, errorMessage => {
         console.log("QR scanning error: ", errorMessage);
     });
+
+    document.getElementById("qrCodeInput").focus();
 }
 
 // Function to stop all scanners safely
@@ -81,6 +85,7 @@ function validateMatch() {
 // Function to update selected Province
 function updateProvince() {
     selectedProvince = document.getElementById("ProvinceSelect").value;
+    document.getElementById("ProvinceSelect").focus();
 }
 
 // Refresh button stops scanning and reloads the page
@@ -97,4 +102,12 @@ document.getElementById("startBarcodeScanning").addEventListener("click", functi
 // Start QR code scanning
 document.getElementById("startQrScanning").addEventListener("click", function() {
     startQrScanner();
+});
+
+
+// Global focus event for interactive elements
+document.addEventListener("click", function(event) {
+    if (event.target.classList.contains("focusable")) {
+        event.target.focus();
+    }
 });
