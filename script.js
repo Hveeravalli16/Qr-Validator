@@ -106,7 +106,7 @@ document.getElementById("startQrScanning").addEventListener("click", function() 
 
 
 // Global focus event for interactive elements
-document.addEventListener("active", function(event) {
+document.addEventListener("click", function(event) {
     if (event.target.classList.contains("focusable")) {
         event.target.focus();
     }
