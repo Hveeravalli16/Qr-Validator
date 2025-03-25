@@ -22,7 +22,7 @@ function startBarcodeScanner() {
         console.log("Barcode scanning error: ", errorMessage);
     });
 
-    document.getElementById("barcodeInput").focus();
+    document.getElementById("barcodeScanner").focus();
 }
 
 // Function to start QR code scanning
@@ -43,7 +43,7 @@ function startQrScanner() {
         console.log("QR scanning error: ", errorMessage);
     });
 
-    document.getElementById("qrCodeInput").focus();
+    document.getElementById("qrScanner").focus();
 }
 
 // Function to stop all scanners safely
@@ -105,9 +105,3 @@ document.getElementById("startQrScanning").addEventListener("click", function() 
 });
 
 
-// Global focus event for interactive elements
-document.addEventListener("click", function(event) {
-    if (event.target.classList.contains("focusable")) {
-        event.target.focus();
-    }
-});
