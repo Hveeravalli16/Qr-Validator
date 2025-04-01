@@ -3,49 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barcode & QR Code Scanner</title>
+    <title>STLTH QR Validator</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://unpkg.com/@zxing/library"></script>
+    <script src="https://unpkg.com/html5-qrcode" defer></script>
     <script src="script.js" defer></script>
 </head>
 <body>
-    <h2>Scan & Validate</h2>
+    <img src="images/STLTH_LOGO_600x.webp" alt="Logo" id="logo">
 
-    <!-- Barcode Input -->
+    <h2>Carton Barcode & QR Validator</h2>
+
+    <button id="startBarcodeScanning" >Scan Barcode</button>
+    
+
+    <!-- Barcode Scanner -->
     <h3>Enter or Scan Barcode</h3>
-    <input type="text" id="barcodeInput" placeholder="Scan or enter barcode">
-    <button onclick="startBarcodeScanner()">Scan Barcode</button>
+    <input type="text" id="barcodeInput"  placeholder="Scan or enter barcode">
+    <div id="barcodeScanner" ></div>
 
-    <!-- QR Code Input -->
-    <h3>Enter or Scan QR Code</h3>
-    <input type="text" id="qrCodeInput" placeholder="Scan or enter QR Code">
-    <button onclick="startQrScanner()">Scan QR Code</button>
-
-    <!-- Province Selection -->
+    <!-- Dropdown for Province Selection -->
     <h3>Select Province</h3>
     <select id="ProvinceSelect" onchange="updateProvince()">
-        <option value="">-- Select Province --</option>
-        <option value="CA">CA</option>
-        <option value="FD">FD</option>
-        <option value="ON">ON</option>
-        <option value="QC">QC</option>
-        <option value="AB">AB</option>
-        <option value="PE">PE</option>
-        <option value="MB">MB</option>
-        <option value="NU">NU</option>
-        <option value="NB">NB</option>
-    </select>
+        <option value="">-- Select a Province --</option>
+        <option value="CA">CANADA</option>
+        <option value="FD">FEDERAL</option>
+        <option value="ON">ONTARIO</option>
+        <option value="QC">QUEBEC</option>
+        <option value="AB">ALBERTA</option>
+        <option value="MB">MANITOBA</option>
+        <option value="PE">PEI</option>
+        <option value="NU">NUNAVUT</option>
+        <option value="NB">NEW BRUNSWICK</option>
+        <option value="YT">YUKON</option>
+        <option value="NT">NORTHWEST TERRITORIES</option>
+    </select><br><br>
 
-    <!-- Scanner Box (Hidden Initially) -->
-    <div id="scannerBox">
-        <video id="scannerVideo"></video>
-        <button onclick="stopScanning()">Stop Scanning</button>
-    </div>
+    <button id="startQrScanning">Scan QR Code</button>
+    <!-- QR Code Scanner -->
+    <h3>Enter or Scan QR Code</h3>
+    <input type="text" id="qrCodeInput" placeholder="Scan or enter QR Code">
+    <div id="qrScanner"></div>
 
-    <!-- Validation -->
-    <button onclick="validateMatch()">Validate</button>
+    <!-- Validate Match -->
+    <button id="validateButton" onclick="validateMatch()">Validate</button>
     <p id="validationResult"></p>
 
-    <button id="refreshButton">Refresh</button>
+    <button id="refreshButton">Scan Another Product</button>
 </body>
+
+<footer>&copy 2025 | Sri Harsha Veeravalli</footer>
+
 </html>

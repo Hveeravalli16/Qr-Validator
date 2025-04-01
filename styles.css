@@ -1,40 +1,68 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     text-align: center;
+    padding: 20px;
+    background-image: url('images/background.jpeg');
+   /* background-size:auto;
+    background-attachment: fixed;
+    background-position: 100%;*/
+}
+
+#logo {
+    inline-size: 350px;
 }
 
 h2 {
     color: #333;
+    font-size: 25px;
 }
 
-/* Input Fields */
-input, select, button {
-    padding: 10px;
-    margin: 5px;
+input{
+    padding:10px;
+    border-radius: 5px;
+    background-color:floralwhite;
+    border-color: floralwhite;
+}
+
+button {
+    padding: 10px 20px;
     font-size: 16px;
+    margin: 10px;
+    border-radius: 5px;
+    border-color:#007bff ;
+    color: white;
+    background-color:#007bff;
+    cursor: pointer;
 }
 
-/* Scanner Box */
-#scannerBox {
-    display: none;
-    position: fixed;
-    inset-block-end: -100%;
-    inset-inline-start: 0;
+#ProvinceSelect{
+    padding: 10px;
+    border-radius: 5px;
+    background-color:floralwhite;
+    border-color: floralwhite;
+}
+
+#validateButton{
+    background-color: red;
+    border-color: red;
+    color: white;
+}
+
+#validationResult {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#barcodeScanner, #qrScanner {
     inline-size: 100%;
-    block-size: 50vh;
-    background: white;
-    box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
-    transition: bottom 0.3s ease-in-out;
-    text-align: center;
-    padding: 20px;
+    max-inline-size: 400px;
+    margin: auto;
 }
 
-#scannerBox.active {
-    inset-block-end: 0;
-}
-
-/* Scanner Video */
-#scannerVideo {
-    inline-size: 100%;
-    max-block-size: 40vh;
+footer{
+    margin: 30px;
+    font-style:italic;
+    font-weight: bold;
+    font-family: cursive;
+    font-size: large;
 }
