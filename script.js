@@ -8,7 +8,7 @@ let qrScanner = null;
 function startBarcodeScanner() {
     stopScanning(); // Stops any active scanner before starting a new one
 
-    barcodeScanner = new Html5Qrcode(
+    barcodeScanner = new Html5QrcodeScanner(
         "barcodeScanner",
         { fps: 10, qrbox: 250 },
         false
@@ -29,9 +29,9 @@ function startBarcodeScanner() {
 function startQrScanner() {
     stopScanning(); // Stops any active scanner before starting a new one
 
-    qrScanner = new Html5Qrcode(
+    qrScanner = new Html5QrcodeScanner(
         "qrScanner",
-        { fps: 10, qrbox: 250},
+        { fps: 10, qrbox: 250 , inversionAttempts: "both"},
         false
     );
 
