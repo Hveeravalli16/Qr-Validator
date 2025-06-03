@@ -31,7 +31,7 @@ function startQrScanner() {
 
     qrScanner = new Html5Qrcode(
         "qrScanner",
-        { fps: 10, qrbox: 250, inversionAttempts: "both" },
+        { fps: 10, qrbox: 250},
         false
     );
 
