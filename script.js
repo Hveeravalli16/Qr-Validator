@@ -4,102 +4,109 @@ let qrCodeValue = "";
 let barcodeScanner = null;
 let qrScanner = null;
 
-// Function to start barcode scanning
-function startBarcodeScanner() {
-    stopScanning(); // Stops any active scanner before starting a new one
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTXWBFtoDpa1mfzHn3h7urB1yCxcEi7tecktHxY3CHN_9-WNPlxQRvPs_YIHR7LHde/exec"; // REPLACE THIS
 
-    barcodeScanner = new Html5QrcodeScanner(
-        "barcodeScanner",
-        { fps: 10, qrbox: 250 },
-        false
-    );
-
-    barcodeScanner.render(result => {
-        barcodeValue = result;
-        document.getElementById("barcodeInput").value = barcodeValue;
-        stopScanning(); // Stops scanner after successful scan
-    }, errorMessage => {
-        console.log("Barcode scanning error: ", errorMessage);
-    });
-
-    document.getElementById("barcodeScanner").focus();
-}
-
-// Function to start QR code scanning
-function startQrScanner() {
-    stopScanning(); // Stops any active scanner before starting a new one
-
-    qrScanner = new Html5QrcodeScanner(
-        "qrScanner",
-        { fps: 10, qrbox: 250 , inversionAttempts: "both"},
-        false
-    );
-
-    qrScanner.render(result => {
-        qrCodeValue = result;
-        document.getElementById("qrCodeInput").value = qrCodeValue;
-        stopScanning(); // Stops scanner after successful scan
-    }, errorMessage => {
-        console.log("QR scanning error: ", errorMessage);
-    });
-
-    document.getElementById("qrScanner").focus();
-}
-
-// Function to stop all scanners safely
-function stopScanning() {
-    if (barcodeScanner) {
-        try {
-            barcodeScanner.clear();
-        } catch (error) {
-            console.warn("Barcode scanner already cleared or not present.");
-        }
-        barcodeScanner = null;
-    }
-
-    if (qrScanner) {
-        try {
-            qrScanner.clear();
-        } catch (error) {
-            console.warn("QR scanner already cleared or not present.");
-        }
-        qrScanner = null;
-    }
-}
-
-// Function to validate match
-function validateMatch() {
-    const modifiedBarcode = document.getElementById("barcodeInput").value + selectedProvince;
-    const enteredQrCode = document.getElementById("qrCodeInput").value;
-    const resultElement = document.getElementById("validationResult");
-
-    if (modifiedBarcode === enteredQrCode) {
-        resultElement.innerText = "Match ✅";
-        resultElement.style.color = "green";
-    } else {
-        resultElement.innerText = "No Match ❌";
-        resultElement.style.color = "red";
-    }
-}
-
-// Function to update selected Province
 function updateProvince() {
-    selectedProvince = document.getElementById("ProvinceSelect").value;
-    document.getElementById("ProvinceSelect").focus();
+  selectedProvince = document.getElementById("ProvinceSelect").value;
 }
 
-// Refresh button stops scanning and reloads the page
-document.getElementById("refreshButton").addEventListener("click", function() {
+function startBarcodeScanner() {
+  stopScanning();
+
+  barcodeScanner = new Html5QrcodeScanner(
+    "barcodeScanner",
+    { fps: 10, qrbox: 250 },
+    false
+  );
+
+  barcodeScanner.render(result => {
+    barcodeValue = result;
+    document.getElementById("barcodeInput").value = barcodeValue;
     stopScanning();
-    location.reload();
-});
+  }, error => {
+    console.warn("Barcode scan error: ", error);
+  });
+}
 
-// Start barcode scanning
-document.getElementById("startBarcodeScanning").addEventListener("click", function() {
-    startBarcodeScanner();
-});
+function startQrScanner() {
+  stopScanning();
 
-// Start QR code scanning
-document.getElementById("startQrScanning").addEventListener("click", function() {
-    startQrScanner();
+  qrScanner = new Html5QrcodeScanner(
+    "qrScanner",
+    { fps: 10, qrbox: 250, inversionAttempts: "both" },
+    false
+  );
+
+  qrScanner.render(result => {
+    qrCodeValue = result;
+    document.getElementById("qrCodeInput").value = qrCodeValue;
+    stopScanning();
+  }, error => {
+    console.warn("QR scan error: ", error);
+  });
+}
+
+function stopScanning() {
+  if (barcodeScanner) {
+    try { barcodeScanner.clear(); } catch (e) {}
+    barcodeScanner = null;
+  }
+
+  if (qrScanner) {
+    try { qrScanner.clear(); } catch (e) {}
+    qrScanner = null;
+  }
+}
+
+function validateMatch() {
+  const barcodeInput = document.getElementById("barcodeInput").value.trim();
+  const qrInput = document.getElementById("qrCodeInput").value.trim();
+  const modifiedBarcode = barcodeInput + selectedProvince;
+
+  if (modifiedBarcode === qrInput) {
+    fetchProductDetails(barcodeInput, selectedProvince);
+  } else {
+    const result = document.getElementById("validationResult");
+    result.innerText = "No Match ❌";
+    result.style.color = "red";
+  }
+}
+
+function fetchProductDetails(barcode, province) {
+  const resultDiv = document.getElementById("validationResult");
+  const url = `${SCRIPT_URL}?barcode=${barcode}&province=${province}`;
+
+  resultDiv.innerHTML = "🔍 Looking up product...";
+
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        resultDiv.innerText = "❌ " + data.error;
+        resultDiv.style.color = "red";
+      } else {
+        const brandLine = `${data.brand} – ${data.description}`;
+        const provinceLine = `${data.brand} – ${data.description} – ${data.provinceCode}`;
+        resultDiv.innerHTML = `
+          ✅ Match<br>
+          <strong>Base SKU:</strong> ${data.baseSku}<br>
+          <strong>${brandLine}</strong><br><br>
+          <strong>Provincial SKU:</strong> ${data.provincialSku}<br>
+          <strong>${provinceLine}</strong>
+        `;
+        resultDiv.style.color = "green";
+      }
+    })
+    .catch(err => {
+      console.error("Fetch error:", err);
+      resultDiv.innerText = "❌ Error fetching data.";
+    });
+}
+
+document.getElementById("startBarcodeScanning").addEventListener("click", startBarcodeScanner);
+document.getElementById("startQrScanning").addEventListener("click", startQrScanner);
+document.getElementById("validateButton").addEventListener("click", validateMatch);
+document.getElementById("refreshButton").addEventListener("click", () => {
+  stopScanning();
+  location.reload();
 });

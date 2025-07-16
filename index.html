@@ -1,56 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STLTH QR Validator</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <script src="script.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>STLTH QR Validator</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js"></script>
 </head>
 <body>
-    <img src="images/STLTH_LOGO_600x.webp" alt="Logo" id="logo">
+  <img src="images/STLTH_LOGO_600x.webp" alt="Logo" id="logo" />
 
-    <h2>Carton Barcode & QR Validator</h2>
+  <h2>Carton Barcode & QR Validator</h2>
 
-    <button id="startBarcodeScanning" >Scan Barcode</button>
-    
+  <button id="startBarcodeScanning">Scan Barcode</button>
 
-    <!-- Barcode Scanner -->
-    <h3>Enter or Scan Barcode</h3>
-    <input type="text" id="barcodeInput"  placeholder="Scan or enter barcode">
-    <div id="barcodeScanner" ></div>
+  <h3>Enter or Scan Barcode</h3>
+  <input type="text" id="barcodeInput" placeholder="Scan or enter barcode" />
+  <div id="barcodeScanner"></div>
 
-    <!-- Dropdown for Province Selection -->
-    <h3>Select Province</h3>
-    <select id="ProvinceSelect" onchange="updateProvince()">
-        <option value="">-- Select a Province --</option>
-        <option value="CA">CANADA</option>
-        <option value="FD">FEDERAL</option>
-        <option value="ON">ONTARIO</option>
-        <option value="QC">QUEBEC</option>
-        <option value="AB">ALBERTA</option>
-        <option value="MB">MANITOBA</option>
-        <option value="PE">PEI</option>
-        <option value="NU">NUNAVUT</option>
-        <option value="NB">NEW BRUNSWICK</option>
-        <option value="YT">YUKON</option>
-        <option value="NT">NORTHWEST TERRITORIES</option>
-    </select><br><br>
+  <h3>Select Province</h3>
+  <select id="ProvinceSelect" onchange="updateProvince()">
+    <option value="">-- Select a Province --</option>
+    <option value="CA">CANADA</option>
+    <option value="FD">FEDERAL</option>
+    <option value="ON">ONTARIO</option>
+    <option value="QC">QUEBEC</option>
+    <option value="AB">ALBERTA</option>
+    <option value="MB">MANITOBA</option>
+    <option value="PE">PEI</option>
+    <option value="NU">NUNAVUT</option>
+    <option value="NB">NEW BRUNSWICK</option>
+    <option value="YT">YUKON</option>
+    <option value="NT">NORTHWEST TERRITORIES</option>
+  </select>
 
-    <button id="startQrScanning">Scan QR Code</button>
-    <!-- QR Code Scanner -->
-    <h3>Enter or Scan QR Code</h3>
-    <input type="text" id="qrCodeInput" placeholder="Scan or enter QR Code">
-    <div id="qrScanner"></div>
+  <button id="startQrScanning">Scan QR Code</button>
 
-    <!-- Validate Match -->
-    <button id="validateButton" onclick="validateMatch()">Validate</button>
-    <p id="validationResult"></p>
+  <h3>Enter or Scan QR Code</h3>
+  <input type="text" id="qrCodeInput" placeholder="Scan or enter QR Code" />
+  <div id="qrScanner"></div>
 
-    <button id="refreshButton">Scan Another Product</button>
+  <button id="validateButton">Validate</button>
+
+  <p id="validationResult"></p>
+
+  <button id="refreshButton">Scan Another Product</button>
+
+  <footer>&copy; 2025| Sri Harsha Veeravalli</footer>
+
+
 </body>
-
-<footer>&copy 2025 | Sri Harsha Veeravalli.</footer>
-
 </html>
