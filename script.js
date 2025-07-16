@@ -1,8 +1,7 @@
-let barcodeValue = "";
-let selectedProvince = "";
-let qrCodeValue = "";
-let barcodeScanner = null;
-let qrScanner = null;
+let barcodeData = "";
+let provinceCode = "";
+let html5QrcodeScanner;
+const sheetAPI = "https://script.google.com/macros/s/AKfycbzTXWBFtoDpa1mfzHn3h7urB1yCxcEi7tecktHxY3CHN_9-WNPlxQRvPs_YIHR7LHde/exec";
 
 // Function to start barcode scanning
 function startBarcodeScanner() {
