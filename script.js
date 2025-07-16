@@ -1,74 +1,105 @@
-let barcodeData = "";
-let provinceCode = "";
-let html5QrcodeScanner;
-const sheetAPI = "https://script.google.com/macros/s/AKfycbzTXWBFtoDpa1mfzHn3h7urB1yCxcEi7tecktHxY3CHN_9-WNPlxQRvPs_YIHR7LHde/exec";
+let barcodeValue = "";
+let selectedProvince = "";
+let qrCodeValue = "";
+let barcodeScanner = null;
+let qrScanner = null;
 
-// DOM elements
-const scannerDiv = document.getElementById("scanner");
-const barcodeDisplay = document.getElementById("barcode-display");
-const qrDisplay = document.getElementById("qr-display");
-const productInfo = document.getElementById("product-info");
-const validationResult = document.getElementById("validation-result");
+// Function to start barcode scanning
+function startBarcodeScanner() {
+    stopScanning(); // Stops any active scanner before starting a new one
 
-function startScanner(onScanSuccess) {
-  scannerDiv.style.display = "block";
-
-  html5QrcodeScanner = new Html5Qrcode("scanner");
-  Html5Qrcode.getCameras().then(devices => {
-    if (devices && devices.length) {
-      const cameraId = devices[0].id;
-      html5QrcodeScanner.start(
-        cameraId,
+    barcodeScanner = new Html5QrcodeScanner(
+        "barcodeScanner",
         { fps: 10, qrbox: 250 },
-        onScanSuccess
-      );
-    }
-  }).catch(err => {
-    alert("Camera access error: " + err);
-  });
+        false
+    );
+
+    barcodeScanner.render(result => {
+        barcodeValue = result;
+        document.getElementById("barcodeInput").value = barcodeValue;
+        stopScanning(); // Stops scanner after successful scan
+    }, errorMessage => {
+        console.log("Barcode scanning error: ", errorMessage);
+    });
+
+    document.getElementById("barcodeScanner").focus();
 }
 
-function stopScanner() {
-  if (html5QrcodeScanner) {
-    html5QrcodeScanner.stop().then(() => {
-      html5QrcodeScanner.clear();
-      scannerDiv.style.display = "none";
-    }).catch(console.error);
-  }
+// Function to start QR code scanning
+function startQrScanner() {
+    stopScanning(); // Stops any active scanner before starting a new one
+
+    qrScanner = new Html5QrcodeScanner(
+        "qrScanner",
+        { fps: 10, qrbox: 250 , inversionAttempts: "both"},
+        false
+    );
+
+    qrScanner.render(result => {
+        qrCodeValue = result;
+        document.getElementById("qrCodeInput").value = qrCodeValue;
+        stopScanning(); // Stops scanner after successful scan
+    }, errorMessage => {
+        console.log("QR scanning error: ", errorMessage);
+    });
+
+    document.getElementById("qrScanner").focus();
 }
 
-document.getElementById("scan-barcode-btn").addEventListener("click", () => {
-  stopScanner();
-  startScanner((decodedText) => {
-    stopScanner();
-    barcodeData = decodedText.trim();
-    barcodeDisplay.textContent = barcodeData;
-
-    // Extract province suffix (last 2 characters)
-    provinceCode = barcodeData.slice(-2);
-
-    fetch(`${sheetAPI}?barcode=${barcodeData}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) {
-          productInfo.textContent = "Product not found.";
-        } else {
-          productInfo.textContent = `${data.baseSku} - ${data.brand} - ${data.product}`;
+// Function to stop all scanners safely
+function stopScanning() {
+    if (barcodeScanner) {
+        try {
+            barcodeScanner.clear();
+        } catch (error) {
+            console.warn("Barcode scanner already cleared or not present.");
         }
-      });
-  });
+        barcodeScanner = null;
+    }
+
+    if (qrScanner) {
+        try {
+            qrScanner.clear();
+        } catch (error) {
+            console.warn("QR scanner already cleared or not present.");
+        }
+        qrScanner = null;
+    }
+}
+
+// Function to validate match
+function validateMatch() {
+    const modifiedBarcode = document.getElementById("barcodeInput").value + selectedProvince;
+    const enteredQrCode = document.getElementById("qrCodeInput").value;
+    const resultElement = document.getElementById("validationResult");
+
+    if (modifiedBarcode === enteredQrCode) {
+        resultElement.innerText = "Match ✅";
+        resultElement.style.color = "green";
+    } else {
+        resultElement.innerText = "No Match ❌";
+        resultElement.style.color = "red";
+    }
+}
+
+// Function to update selected Province
+function updateProvince() {
+    selectedProvince = document.getElementById("ProvinceSelect").value;
+    document.getElementById("ProvinceSelect").focus();
+}
+
+// Refresh button stops scanning and reloads the page
+document.getElementById("refreshButton").addEventListener("click", function() {
+    stopScanning();
+    location.reload();
 });
 
-document.getElementById("scan-qr-btn").addEventListener("click", () => {
-  stopScanner();
-  startScanner((qrText) => {
-    stopScanner();
-    qrDisplay.textContent = qrText;
+// Start barcode scanning
+document.getElementById("startBarcodeScanning").addEventListener("click", function() {
+    startBarcodeScanner();
+});
 
-    if (qrText.trim() === barcodeData) {
-      validationResult.innerHTML = `✅ Match<br>Provincial SKU: ${provinceCode}<br>${productInfo.textContent} - ${provinceCode}`;
-    } else {
-      validationResult.innerHTML = `❌ No Match`;
-    }
-  });
+// Start QR code scanning
+document.getElementById("startQrScanning").addEventListener("click", function() {
+    startQrScanner();
 });
