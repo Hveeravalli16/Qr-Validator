@@ -46,6 +46,36 @@ function startQrScanner() {
     document.getElementById("qrScanner").focus();
 }
 
+// Function to start QR code scanning (iPhone compatible)
+function startQrScannerMobile() {
+    stopScanning(); // Stops any active scanner before starting a new one
+
+    const qrCodeRegionId = "qrScanner";
+    qrScanner = new Html5Qrcode(qrCodeRegionId);
+
+    qrScanner.start(
+        { facingMode: "environment" },
+        {
+            fps: 10,
+            qrbox: 250,
+            formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
+            inversionAttempts: "both"
+        },
+        qrCodeMessage => {
+            qrCodeValue = qrCodeMessage;
+            document.getElementById("qrCodeInput").value = qrCodeValue;
+            stopScanning(); // Stops scanner after successful scan
+        },
+        errorMessage => {
+            console.log("QR scanning error: ", errorMessage);
+        }
+    ).catch(err => {
+        console.error("Unable to start QR scanner: ", err);
+    });
+
+    document.getElementById("qrScanner").focus();
+}
+
 // Function to stop all scanners safely
 function stopScanning() {
     if (barcodeScanner) {
@@ -102,4 +132,9 @@ document.getElementById("startBarcodeScanning").addEventListener("click", functi
 // Start QR code scanning
 document.getElementById("startQrScanning").addEventListener("click", function() {
     startQrScanner();
+});
+
+// Example: Add a button for mobile QR scanning
+document.getElementById("startQrScanningMobile").addEventListener("click", function() {
+    startQrScannerMobile();
 });
