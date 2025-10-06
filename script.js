@@ -57,9 +57,9 @@ function startQrScannerMobile() {
         { facingMode: "environment" },
         {
             fps: 10,
-            qrbox: 250,
+            qrbox: 300, // Increased box size for better detection
             formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
-            inversionAttempts: "both"
+            inversionAttempts: "both" // Ensures inverted QR codes are detected
         },
         qrCodeMessage => {
             qrCodeValue = qrCodeMessage;
@@ -67,6 +67,8 @@ function startQrScannerMobile() {
             stopScanning(); // Stops scanner after successful scan
         },
         errorMessage => {
+            // Optionally display error to user
+            document.getElementById("validationResult").innerText = "Try increasing brightness or avoid glare for inverted QR codes.";
             console.log("QR scanning error: ", errorMessage);
         }
     ).catch(err => {
